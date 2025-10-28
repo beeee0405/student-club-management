@@ -1,0 +1,62 @@
+// This is a symlink/reference to the actual schema
+// Actual schema is at: src/prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(USER)
+  members   Member[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Club {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  image       String?
+  facebookUrl String?
+  members     Member[]
+  events      Event[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Member {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  clubId    Int
+  role      String   @default("member")
+  user      User     @relation(fields: [userId], references: [id])
+  club      Club     @relation(fields: [clubId], references: [id])
+  joinedAt  DateTime @default(now())
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  clubId      Int
+  club        Club     @relation(fields: [clubId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  location    String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
