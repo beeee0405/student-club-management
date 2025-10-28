@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
-    "start": "node build/index.js",
+    "start": "npx prisma migrate deploy && node build/scripts/seed.js && node build/index.js",
     "prisma:generate": "prisma generate --schema src/prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev --schema src/prisma/schema.prisma",
     "seed": "ts-node-dev --transpile-only -r dotenv/config src/scripts/seed.ts",
@@ -23,6 +23,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.9.2",
+    "prisma": "^6.17.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -33,7 +34,6 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "prisma": "^6.17.1",
     "ts-node-dev": "^2.0.0"
   }
 }
