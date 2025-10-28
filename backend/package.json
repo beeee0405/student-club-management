@@ -7,10 +7,10 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node build/index.js",
-  "prisma:generate": "prisma generate --schema src/prisma/schema.prisma",
-  "prisma:migrate": "prisma migrate dev --schema src/prisma/schema.prisma",
-  "seed": "ts-node-dev --transpile-only -r dotenv/config src/scripts/seed.ts",
-  "test": "echo \"No tests yet\""
+    "prisma:generate": "prisma generate --schema src/prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema src/prisma/schema.prisma",
+    "seed": "ts-node-dev --transpile-only -r dotenv/config src/scripts/seed.ts",
+    "test": "echo \"No tests yet\""
   },
   "keywords": [],
   "author": "",
@@ -26,12 +26,12 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/bcryptjs": "^2.4.6",
     "@types/multer": "^2.0.0",
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.9.2",
     "prisma": "^6.17.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
