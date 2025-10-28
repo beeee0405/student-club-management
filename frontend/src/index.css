@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* Only set box-sizing; let Tailwind Preflight manage margins/paddings
+   (resetting margin globally breaks utilities like mx-auto centering) */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", "Poppins", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+/* Simple marquee animation for header announcement */
+.marquee-track {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+  animation: marquee-left 22s linear infinite;
+  padding-left: 100%;
+}
+
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Pause scrolling when user hovers for readability */
+.marquee-paused:hover {
+  animation-play-state: paused;
+}
+
+/* Slight glow to improve legibility on the gradient background */
+.text-glow {
+  text-shadow: 0 1px 0 rgba(0,0,0,0.25), 0 0 10px rgba(255,255,255,0.35);
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Slower scroll on large screens for elegance */
+@media (min-width: 1024px) {
+  .marquee-track {
+    animation-duration: 30s;
+  }
+}
