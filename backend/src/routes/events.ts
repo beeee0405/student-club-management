@@ -96,7 +96,13 @@ router.post('/', requireAuth, requireAdmin, upload.single('image'), async (req, 
   try {
     const data = EventSchema.parse(req.body);
     const image = req.file ? `/${uploadDir}/${req.file.filename}` : undefined;
-    const event = await prisma.event.create({ data: { ...data, image } });
+    const event = await prisma.event.create({ 
+      data: { 
+        ...data, 
+        image,
+        clubId: Number(data.clubId)
+      } 
+    });
     res.status(201).json(event);
   } catch (err: any) {
     if (err.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
