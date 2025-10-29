@@ -2,10 +2,10 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tansta
 import { clubApi } from '../lib/api/clubs';
 import type { Club, Member } from '../lib/types';
 
-export function useClubs({ page = 1, limit = 10, search = '' } = {}) {
+export function useClubs({ page = 1, limit = 10, search = '', type = '' } = {}) {
   return useQuery<{ clubs: Club[]; total: number }>({
-    queryKey: ['clubs', { page, limit, search }],
-    queryFn: () => clubApi.getClubs({ page, limit, search }),
+    queryKey: ['clubs', { page, limit, search, type }],
+    queryFn: () => clubApi.getClubs({ page, limit, search, type }),
     placeholderData: keepPreviousData,
   });
 }

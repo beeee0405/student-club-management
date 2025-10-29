@@ -13,6 +13,8 @@ export interface Club {
   description: string;
   image?: string;
   facebookUrl?: string;
+  type?: 'STUDENT' | 'FACULTY';
+  faculty?: string;
   memberCount: number;
   eventCount: number;
   createdAt: string;

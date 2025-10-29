@@ -3,9 +3,9 @@ import type { Club, Member } from '../types';
 
 export const clubApi = {
   // Lấy danh sách clubs với phân trang và tìm kiếm
-  getClubs: async ({ page = 1, limit = 10, search = '' }) => {
+  getClubs: async ({ page = 1, limit = 10, search = '', type = '' }) => {
     const { data } = await api.get<{ clubs: Club[]; total: number }>('/clubs', {
-      params: { page, limit, search },
+      params: { page, limit, search, type },
     });
     return data;
   },

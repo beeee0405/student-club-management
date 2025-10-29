@@ -16,6 +16,8 @@ const clubSchema = z.object({
     .url('Đường dẫn Facebook không hợp lệ')
     .optional()
     .or(z.literal('')),
+  type: z.enum(['STUDENT', 'FACULTY']),
+  faculty: z.string().optional().or(z.literal('')),
 });
 
 type ClubFormData = z.infer<typeof clubSchema> & {
@@ -46,10 +48,13 @@ const ClubFormDialog = ({
     formState: { errors, isSubmitting },
     reset,
     setValue,
+    watch,
   } = useForm<ClubFormData>({
     resolver: zodResolver(clubSchema),
     defaultValues: initialData,
   });
+
+  const clubType = watch('type');
 
   // Cập nhật form khi initialData thay đổi (mở dialog sửa)
   useEffect(() => {
@@ -57,7 +62,7 @@ const ClubFormDialog = ({
       reset(initialData as any);
       setDescription(initialData.description || '');
     } else {
-      reset({ name: '', description: '', facebookUrl: '' } as any);
+      reset({ name: '', description: '', facebookUrl: '', type: 'STUDENT', faculty: '' } as any);
       setDescription('');
     }
   }, [initialData, reset]);
@@ -113,6 +118,36 @@ const ClubFormDialog = ({
               <p className="text-sm text-red-500">{errors.description.message}</p>
             )}
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="type">Loại câu lạc bộ</Label>
+            <select
+              id="type"
+              {...register('type')}
+              className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white shadow-sm"
+            >
+              <option value="STUDENT">CLB Sinh viên</option>
+              <option value="FACULTY">CLB Trường/Khoa/Viện</option>
+            </select>
+            {errors.type && (
+              <p className="text-sm text-red-500">{errors.type.message}</p>
+            )}
+          </div>
+
+          {clubType === 'FACULTY' && (
+            <div className="space-y-2">
+              <Label htmlFor="faculty">Tên Trường/Khoa/Viện</Label>
+              <Input
+                id="faculty"
+                {...register('faculty')}
+                placeholder="VD: Viện Đào tạo Công nghệ thông tin"
+                className="bg-white border-gray-300 shadow-sm"
+              />
+              {errors.faculty && (
+                <p className="text-sm text-red-500">{errors.faculty.message}</p>
+              )}
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="facebookUrl">Đường dẫn Facebook (tuỳ chọn)</Label>

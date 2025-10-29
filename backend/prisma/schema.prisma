@@ -31,10 +31,17 @@ model Club {
   description String
   image       String?
   facebookUrl String?
+  type        ClubType @default(STUDENT)
+  faculty     String?
   members     Member[]
   events      Event[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+enum ClubType {
+  STUDENT
+  FACULTY
 }
 
 model Member {

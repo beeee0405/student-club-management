@@ -17,6 +17,8 @@ const ClubSchema = z.object({
     .url('Đường dẫn Facebook không hợp lệ')
     .optional()
     .or(z.literal('').transform(() => undefined)),
+  type: z.enum(['STUDENT', 'FACULTY']).optional(),
+  faculty: z.string().optional().or(z.literal('').transform(() => undefined)),
 });
 
 // Helper to upload buffer to Cloudinary
@@ -37,9 +39,13 @@ router.get('/', async (req, res) => {
   const page = parseInt((req.query.page as string) || '1', 10);
   const limit = parseInt((req.query.limit as string) || '10', 10);
   const search = (req.query.search as string) || '';
+  const type = req.query.type as string; // 'STUDENT' or 'FACULTY'
   const skip = (page - 1) * limit;
 
-  const where = search ? { name: { contains: search } } : {};
+  const where: any = search ? { name: { contains: search } } : {};
+  if (type) {
+    where.type = type;
+  }
 
   const [clubs, total] = await Promise.all([
     prisma.club.findMany({
@@ -60,6 +66,8 @@ router.get('/', async (req, res) => {
     description: c.description,
     image: c.image,
     facebookUrl: c.facebookUrl,
+    type: c.type,
+    faculty: c.faculty,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
     eventCount: c._count?.events ?? 0,
