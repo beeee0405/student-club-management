@@ -15,6 +15,7 @@ const EventsPage = () => {
 
   const { data, isLoading, isError, error, refetch, isFetching } = useEvents({ page, limit, search: searchTerm });
   const { data: clubsData } = useClubs({ page: 1, limit: 100 });
+  const [clubTypeFilter, setClubTypeFilter] = useState<'ALL' | 'STUDENT' | 'FACULTY'>('ALL');
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
   const deleteEvent = useDeleteEvent();
@@ -23,6 +24,11 @@ const EventsPage = () => {
   const total = data?.total ?? 0;
   const totalPages = useMemo(() => Math.max(1, Math.ceil(total / limit)), [total]);
   const clubs = clubsData?.clubs ?? [];
+  const clubsById = useMemo(() => new Map(clubs.map((c) => [c.id, c])), [clubs]);
+  const filteredEvents = useMemo(() => {
+    if (clubTypeFilter === 'ALL') return events;
+    return events.filter((e) => clubsById.get(e.clubId)?.type === clubTypeFilter);
+  }, [events, clubTypeFilter, clubsById]);
 
   useEffect(() => {
     setPage(1);
@@ -130,6 +136,18 @@ const EventsPage = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          <div>
+            <label className="text-sm text-gray-600 mr-2">Loại CLB:</label>
+            <select
+              className="h-10 px-3 rounded-md border border-gray-300 bg-white shadow-sm"
+              value={clubTypeFilter}
+              onChange={(e) => setClubTypeFilter(e.target.value as any)}
+            >
+              <option value="ALL">Tất cả</option>
+              <option value="STUDENT">Sinh viên</option>
+              <option value="FACULTY">Khoa/Viện</option>
+            </select>
+          </div>
         </div>
 
         {/* Events Table */}
@@ -156,14 +174,30 @@ const EventsPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {events.map((event, index) => (
+                  {filteredEvents.map((event, index) => (
                     <TableRow 
                       key={event.id}
                       className={index % 2 === 0 ? 'bg-white hover:bg-gray-50' : 'bg-gray-50/50 hover:bg-gray-100/50'}
                     >
                       <TableCell className="font-medium text-gray-900">{event.id}</TableCell>
                       <TableCell className="font-medium text-gray-900">{event.title}</TableCell>
-                      <TableCell className="text-gray-600">{event.clubName}</TableCell>
+                      <TableCell className="text-gray-600">
+                        <div className="flex items-center gap-2">
+                          <span>{event.clubName}</span>
+                          {(() => {
+                            const t = clubsById.get(event.clubId)?.type;
+                            if (!t) return null;
+                            const isFaculty = t === 'FACULTY';
+                            return (
+                              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                                isFaculty ? 'bg-indigo-100 text-indigo-800' : 'bg-emerald-100 text-emerald-800'
+                              }`}>
+                                {isFaculty ? 'Khoa/Viện' : 'Sinh viên'}
+                              </span>
+                            );
+                          })()}
+                        </div>
+                      </TableCell>
                       <TableCell className="text-gray-600">{formatDateTime(event.startDate)}</TableCell>
                       <TableCell className="text-gray-600">{formatDateTime(event.endDate)}</TableCell>
                       <TableCell className="text-gray-600">{event.location}</TableCell>

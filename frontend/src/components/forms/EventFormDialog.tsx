@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useState, useEffect } from 'react';
+import type { Club } from '../../lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/Dialog';
 import { Label } from '../../components/ui/Label';
 import Input from '../../components/ui/Input';
@@ -21,10 +22,7 @@ type EventFormData = z.infer<typeof eventSchema> & {
   image?: File;
 };
 
-interface Club {
-  id: number;
-  name: string;
-}
+// Using shared Club type (includes type/faculty)
 
 interface EventFormDialogProps {
   open: boolean;
@@ -156,13 +154,32 @@ const EventFormDialog = ({
               <option value="">Chọn câu lạc bộ</option>
               {clubs.map((club) => (
                 <option key={club.id} value={club.id}>
-                  {club.name}
+                  {club.name} {club.type === 'FACULTY' ? '(Khoa/Viện)' : '(Sinh viên)'}
                 </option>
               ))}
             </select>
             {errors.clubId && (
               <p className="text-sm text-red-500">{errors.clubId.message}</p>
             )}
+            {/* Selected club badge */}
+            {(() => {
+              const selectedId = watch('clubId');
+              const selected = clubs.find((c) => c.id === Number(selectedId));
+              if (!selected) return null;
+              const isFaculty = selected.type === 'FACULTY';
+              return (
+                <div className="text-sm mt-2">
+                  <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                    isFaculty ? 'bg-indigo-100 text-indigo-800' : 'bg-emerald-100 text-emerald-800'
+                  }`}>
+                    {isFaculty ? 'Khoa/Viện' : 'Sinh viên'}
+                  </span>
+                  {isFaculty && selected.faculty && (
+                    <span className="ml-2 text-gray-600">{selected.faculty}</span>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
