@@ -32,13 +32,19 @@ const ClubsPage = () => {
     name: string;
     description: string;
     facebookUrl?: string;
+    type: 'STUDENT' | 'FACULTY';
+    faculty?: string;
     image?: File;
   }) => {
     const formData = new FormData();
     formData.append('name', formInput.name);
     formData.append('description', formInput.description);
+    formData.append('type', formInput.type);
     if (formInput.facebookUrl) {
       formData.append('facebookUrl', formInput.facebookUrl);
+    }
+    if (formInput.faculty) {
+      formData.append('faculty', formInput.faculty);
     }
     if (formInput.image) {
       formData.append('image', formInput.image);
@@ -82,6 +88,8 @@ const ClubsPage = () => {
                   name: selectedClub.name,
                   description: selectedClub.description,
                   facebookUrl: selectedClub.facebookUrl,
+                  type: selectedClub.type,
+                  faculty: selectedClub.faculty,
                 }
               : undefined
           }
