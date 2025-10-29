@@ -18,7 +18,7 @@ const posClass: Record<Corner, string> = {
 };
 
 export default function CornerLogo({ position = 'bottom-right', href = '/', size = 'md', className, ...props }: CornerLogoProps) {
-  const [src, setSrc] = React.useState('/images/tdmu-logo.png');
+  const [src] = React.useState('/images/Logo_TDMU_2024_nguyen_ban.png');
   const [hide, setHide] = React.useState(false);
 
   // sizes
@@ -45,8 +45,7 @@ export default function CornerLogo({ position = 'bottom-right', href = '/', size
             alt="TDMU"
             className={cn('object-contain p-1.5', box)}
             onError={() => {
-              if (src !== '/images/logo.png') setSrc('/images/logo.png');
-              else setHide(true);
+              setHide(true);
             }}
           />
         ) : (

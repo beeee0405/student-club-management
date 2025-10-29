@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Label } from '../../components/ui/Label';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import RichTextEditor from '../../components/ui/RichTextEditor';
 
 const clubSchema = z.object({
   name: z.string().min(2, 'Tên câu lạc bộ phải có ít nhất 2 ký tự'),
@@ -37,12 +38,14 @@ const ClubFormDialog = ({
   mode,
 }: ClubFormDialogProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [description, setDescription] = useState<string>(initialData?.description || '');
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
   } = useForm<ClubFormData>({
     resolver: zodResolver(clubSchema),
     defaultValues: initialData,
@@ -52,10 +55,17 @@ const ClubFormDialog = ({
   useEffect(() => {
     if (initialData) {
       reset(initialData as any);
+      setDescription(initialData.description || '');
     } else {
       reset({ name: '', description: '', facebookUrl: '' } as any);
+      setDescription('');
     }
   }, [initialData, reset]);
+
+  // Cập nhật description trong form khi rich text editor thay đổi
+  useEffect(() => {
+    setValue('description', description);
+  }, [description, setValue]);
 
   const onSubmitForm = async (data: ClubFormData) => {
     try {
@@ -94,10 +104,9 @@ const ClubFormDialog = ({
 
           <div className="space-y-2">
             <Label htmlFor="description">Mô tả</Label>
-            <textarea
-              id="description"
-              {...register('description')}
-              className="w-full min-h-[110px] rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm"
+            <RichTextEditor
+              value={description}
+              onChange={setDescription}
               placeholder="Mô tả về câu lạc bộ..."
             />
             {errors.description && (

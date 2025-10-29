@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Label } from '../../components/ui/Label';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import RichTextEditor from '../../components/ui/RichTextEditor';
 
 const eventSchema = z.object({
   title: z.string().min(2, 'Tên sự kiện phải có ít nhất 2 ký tự'),
@@ -43,6 +44,7 @@ const EventFormDialog = ({
   clubs,
 }: EventFormDialogProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [description, setDescription] = useState<string>(initialData?.description || '');
   
   const {
     register,
@@ -50,6 +52,7 @@ const EventFormDialog = ({
     formState: { errors, isSubmitting },
     reset,
     watch,
+    setValue,
   } = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
@@ -75,6 +78,7 @@ const EventFormDialog = ({
           ? new Date(initialData.endDate).toISOString().slice(0, 16)
           : '',
       });
+      setDescription(initialData.description || '');
     } else {
       reset({
         title: '',
@@ -84,8 +88,14 @@ const EventFormDialog = ({
         endDate: '',
         location: '',
       } as any);
+      setDescription('');
     }
   }, [initialData, reset]);
+
+  // Cập nhật description trong form khi rich text editor thay đổi
+  useEffect(() => {
+    setValue('description', description);
+  }, [description, setValue]);
 
   const startDate = watch('startDate');
 
@@ -126,10 +136,9 @@ const EventFormDialog = ({
 
           <div className="space-y-2">
             <Label htmlFor="description">Mô tả</Label>
-            <textarea
-              id="description"
-              {...register('description')}
-              className="w-full min-h-[110px] rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm"
+            <RichTextEditor
+              value={description}
+              onChange={setDescription}
               placeholder="Mô tả về sự kiện..."
             />
             {errors.description && (

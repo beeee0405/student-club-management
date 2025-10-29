@@ -90,7 +90,10 @@ const ClubDetailPage = () => {
         <section>
           <div className="bg-white border-2 border-blue-100 rounded-2xl shadow-md p-6 md:p-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">Giới thiệu</h2>
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed whitespace-pre-wrap">{club.description}</p>
+            <div 
+              className="text-gray-600 text-base md:text-lg leading-relaxed prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: club.description }}
+            />
           </div>
         </section>
 

@@ -92,7 +92,10 @@ const EventDetailPage = () => {
         {/* Description */}
         <section className="bg-white border-2 border-emerald-100 rounded-2xl shadow-md p-6 md:p-8 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-900">Chi tiết sự kiện</h2>
-          <p className="text-gray-700 leading-relaxed text-lg whitespace-pre-wrap">{event.description}</p>
+          <div 
+            className="text-gray-700 leading-relaxed text-lg prose prose-lg max-w-none mx-auto"
+            dangerouslySetInnerHTML={{ __html: event.description }}
+          />
         </section>
 
         {/* Event Info */}
