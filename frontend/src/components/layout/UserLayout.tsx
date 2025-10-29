@@ -4,7 +4,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import Button from '../ui/Button';
 import CornerLogo from '../ui/CornerLogo';
 import Container from '../ui/Container';
-import FacultyClubsMenu from '../ui/FacultyClubsMenu';
 
 interface UserLayoutProps {
   children: ReactNode;
@@ -50,7 +49,7 @@ const UserLayout = ({ children }: UserLayoutProps) => {
             <Link to="/clubs" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
               Câu lạc bộ
             </Link>
-            <FacultyClubsMenu label="CLB theo Khoa/Viện" />
+            {/* CLB theo Khoa/Viện dropdown đã được thay bằng quản lý động trên Home; menu tạm ẩn */}
             <Link to="/events" className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
               Sự kiện
             </Link>
