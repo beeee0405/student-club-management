@@ -7,6 +7,7 @@ import { MapPin, Phone, Mail, Facebook } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { assetUrl, cn } from '../../lib/utils';
 import Section from '../../components/ui/Section';
+import Skeleton from '../../components/ui/Skeleton';
 
 const Home = () => {
   const { user } = useAuth();
@@ -15,12 +16,12 @@ const Home = () => {
   const [facultyClubsPage, setFacultyClubsPage] = useState(1);
   
   // CLB sinh viên
-  const { data: studentClubsData } = useClubs({ page: studentClubsPage, limit: CLUBS_PER_PAGE, type: 'STUDENT' });
+  const { data: studentClubsData, isLoading: loadingStudentClubs } = useClubs({ page: studentClubsPage, limit: CLUBS_PER_PAGE, type: 'STUDENT' });
   
   // CLB Trường/Khoa/Viện
-  const { data: facultyClubsData } = useClubs({ page: facultyClubsPage, limit: CLUBS_PER_PAGE, type: 'FACULTY' });
+  const { data: facultyClubsData, isLoading: loadingFacultyClubs } = useClubs({ page: facultyClubsPage, limit: CLUBS_PER_PAGE, type: 'FACULTY' });
   
-  const { data: eventsData } = useEvents({ page: 1, limit: 12 });
+  const { data: eventsData, isLoading: loadingEvents } = useEvents({ page: 1, limit: 12 });
   const eventsScrollerRef = useRef<HTMLDivElement | null>(null);
   const [expandedClubId, setExpandedClubId] = useState<number | null>(null);
 
@@ -77,13 +78,25 @@ const Home = () => {
             <h3 className="text-3xl md:text-4xl font-bold text-gray-900">CLB/Đội/Nhóm Sinh viên</h3>
 
             {/* danh sách CLB sinh viên */}
-            {studentClubsData?.clubs?.length ? (
+            {loadingStudentClubs ? (
+              <div className={`grid ${studentClubsGridCols} gap-10 justify-items-center w-full`}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="w-full max-w-lg bg-white rounded-2xl border p-8 md:p-10">
+                    <div className="flex flex-col items-center text-center gap-4">
+                      <Skeleton className="h-32 w-32 rounded-full" />
+                      <Skeleton className="h-6 w-2/3" />
+                      <Skeleton className="h-16 w-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : studentClubsData?.clubs?.length ? (
               <>
                 <div className={`grid ${studentClubsGridCols} gap-10 justify-items-center`}>
                   {studentClubsData.clubs.map((club) => (
                     <div
                       key={club.id}
-                      className="group relative w-full max-w-lg bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 p-8 md:p-10 flex flex-col items-center text-center min-h-[340px] overflow-hidden"
+                      className="group relative w-full max-w-lg bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 p-8 md:p-10 flex flex-col items-center text-center min-h-[340px] overflow-hidden animate-fade-up"
                     >
                       <div className="relative w-32 h-32 md:w-36 md:h-36 mb-6 ring-4 ring-blue-50 rounded-full overflow-hidden">
                         {club.image ? (
@@ -198,13 +211,25 @@ const Home = () => {
             </div>
 
             {/* Danh sách CLB Trường/Khoa/Viện */}
-            {facultyClubsData?.clubs?.length ? (
+            {loadingFacultyClubs ? (
+              <div className={`grid ${facultyClubsGridCols} gap-10 justify-items-center w-full`}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="w-full max-w-lg bg-white rounded-2xl border p-8 md:p-10">
+                    <div className="flex flex-col items-center text-center gap-4">
+                      <Skeleton className="h-32 w-32 rounded-full" />
+                      <Skeleton className="h-6 w-2/3" />
+                      <Skeleton className="h-16 w-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : facultyClubsData?.clubs?.length ? (
               <>
                 <div className={`grid ${facultyClubsGridCols} gap-10 justify-items-center w-full`}>
                   {facultyClubsData.clubs.map((club) => (
                     <div
                       key={club.id}
-                      className="group relative w-full max-w-lg bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 p-8 md:p-10 flex flex-col items-center text-center min-h-[340px] overflow-hidden"
+                      className="group relative w-full max-w-lg bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 p-8 md:p-10 flex flex-col items-center text-center min-h-[340px] overflow-hidden animate-fade-up"
                     >
                       <div className="relative w-32 h-32 md:w-36 md:h-36 mb-6 ring-4 ring-orange-50 rounded-full overflow-hidden">
                         {club.image ? (
@@ -323,7 +348,19 @@ const Home = () => {
               </p>
             </div>
 
-            {eventsData?.events?.length ? (
+            {loadingEvents ? (
+              <div className="flex gap-4 w-full">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="min-w-[280px] md:min-w-[360px] max-w-sm rounded-xl overflow-hidden border p-4 bg-white">
+                    <Skeleton className="h-44 md:h-48 w-full" />
+                    <div className="mt-4 space-y-2">
+                      <Skeleton className="h-5 w-3/4" />
+                      <Skeleton className="h-4 w-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : eventsData?.events?.length ? (
               <div className="relative w-full">
                 {/* Gradient edges to hint scroll */}
                 <div className="pointer-events-none absolute left-0 top-0 h-full w-8 bg-gradient-to-r from-white to-transparent" />
@@ -337,7 +374,7 @@ const Home = () => {
                   {eventsData.events.map((event) => (
                     <div
                       key={event.id}
-                      className="snap-start min-w-[280px] md:min-w-[360px] max-w-sm group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                      className="snap-start min-w-[280px] md:min-w-[360px] max-w-sm group rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 animate-fade-up"
                     >
                       <Link to={`/events/${event.id}`}>
                         {event.image && (

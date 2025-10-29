@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Button from '../ui/Button';
+import ThemeToggle from '../ui/ThemeToggle';
 import CornerLogo from '../ui/CornerLogo';
 import Container from '../ui/Container';
 
@@ -59,6 +60,7 @@ const UserLayout = ({ children }: UserLayoutProps) => {
           </nav>
           {/* Right: actions */}
           <div className="flex items-center justify-end gap-3 pr-0">
+            <ThemeToggle />
             <span className="text-sm text-gray-600 hidden sm:inline">Xin chào, {user?.name || 'Thành'}</span>
             <Button size="sm" variant="outline" onClick={handleLogout}>Đăng xuất</Button>
           </div>
