@@ -124,18 +124,15 @@ const EventDetailPage = () => {
         {club && (
           <section className="bg-white border-2 border-emerald-100 rounded-2xl shadow-md p-6 md:p-8 text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-900">Tổ chức bởi</h2>
-            <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col items-center gap-4">
               {club.image && (
                 <img
                   src={assetUrl(club.image)}
                   alt={club.name}
-                  className="w-28 h-28 rounded-xl object-cover shadow-md shrink-0"
+                  className="w-28 h-28 rounded-xl object-cover shadow-md"
                 />
               )}
-              <div className="flex-1 space-y-4">
-                <h3 className="font-bold text-xl md:text-2xl text-gray-900">{club.name}</h3>
-                <p className="text-base text-gray-700 leading-relaxed">{club.description}</p>
-              </div>
+              <h3 className="font-bold text-xl md:text-2xl text-gray-900">{club.name}</h3>
             </div>
           </section>
         )}
