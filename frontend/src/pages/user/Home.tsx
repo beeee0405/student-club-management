@@ -75,8 +75,6 @@ const Home = () => {
   {/* ===== Student Clubs (CLB Sinh viên) ===== */}
   <Section id="clubs" tone="white" paddingY="sm">
           <div className="flex flex-col items-center text-center gap-16 md:gap-20">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900">CLB/Đội/Nhóm Sinh viên</h3>
-
             {/* danh sách CLB sinh viên */}
             {loadingStudentClubs ? (
               <div className={`grid ${studentClubsGridCols} gap-10 justify-items-center w-full`}>
@@ -200,16 +198,6 @@ const Home = () => {
   {/* ===== Faculty Clubs (CLB Trường/Khoa/Viện) ===== */}
   <Section id="faculty-clubs" tone="muted" paddingY="sm">
           <div className="flex flex-col items-center text-center gap-16 md:gap-20">
-            <div className="flex flex-col items-center gap-6 mt-2">
-              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 relative inline-block">
-                Câu lạc bộ theo Trường/Khoa/Viện trực thuộc TDMU
-                <span className="absolute left-1/2 -bottom-2 w-24 h-1 bg-blue-600 -translate-x-1/2 rounded-full"></span>
-              </h2>
-              <p className="text-gray-600 text-lg md:text-xl">
-                Các CLB học thuật, kỹ năng và chuyên môn trực thuộc Đoàn - Hội cơ sở
-              </p>
-            </div>
-
             {/* Danh sách CLB Trường/Khoa/Viện */}
             {loadingFacultyClubs ? (
               <div className={`grid ${facultyClubsGridCols} gap-10 justify-items-center w-full`}>
