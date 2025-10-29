@@ -1,23 +1,12 @@
 import { Router } from 'express';
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
 import { prisma } from '../prisma/client';
 import { z } from 'zod';
 import { requireAuth, requireAdmin } from '../middlewares/auth';
+import cloudinary from '../lib/cloudinary';
+import { Readable } from 'stream';
 
-const uploadDir = process.env.UPLOAD_DIR || 'uploads';
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadDir),
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `event_${Date.now()}_${Math.random().toString(36).slice(2)}${ext}`);
-  },
-});
-
-const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() });
 const router = Router();
 
 const EventSchema = z.object({
@@ -28,6 +17,20 @@ const EventSchema = z.object({
   endDate: z.coerce.date(),
   location: z.string().optional(),
 });
+
+// Helper to upload buffer to Cloudinary
+async function uploadToCloudinary(buffer: Buffer, folder: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder, resource_type: 'auto' },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result!.secure_url);
+      }
+    );
+    Readable.from(buffer).pipe(stream);
+  });
+}
 
 router.get('/', async (req, res) => {
   const page = parseInt((req.query.page as string) || '1', 10);
@@ -95,7 +98,12 @@ router.get('/:id', async (req, res) => {
 router.post('/', requireAuth, requireAdmin, upload.single('image'), async (req, res) => {
   try {
     const data = EventSchema.parse(req.body);
-    const image = req.file ? `/${uploadDir}/${req.file.filename}` : undefined;
+    let image: string | undefined;
+    
+    if (req.file) {
+      image = await uploadToCloudinary(req.file.buffer, 'events');
+    }
+    
     const event = await prisma.event.create({ 
       data: { 
         ...data, 
@@ -114,7 +122,12 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
   const id = Number(req.params.id);
   try {
     const data = EventSchema.partial().parse(req.body);
-    const image = req.file ? `/${uploadDir}/${req.file.filename}` : undefined;
+    let image: string | undefined;
+    
+    if (req.file) {
+      image = await uploadToCloudinary(req.file.buffer, 'events');
+    }
+    
     const updateData = image ? { ...data, image } : data;
 
     const event = await prisma.event.update({ where: { id }, data: updateData });

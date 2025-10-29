@@ -161,16 +161,9 @@ router.delete('/:clubId/members/:userId', requireAuth, async (req, res) => {
   try {
     await prisma.member.deleteMany({ where: { clubId, userId } });
     res.status(204).send();
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({ message: 'Server error' });
   }
-});
-
-// Events under a club (matches frontend GET /clubs/:clubId/events)
-router.get('/:clubId/events', requireAuth, async (req, res) => {
-  const clubId = Number(req.params.clubId);
-  const events = await prisma.event.findMany({ where: { clubId }, orderBy: { startDate: 'desc' } });
-  res.json(events);
 });
 
 export default router;
