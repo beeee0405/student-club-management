@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { AdminRoute, PublicRoute } from './components/guards/RouteGuards';
+import { api } from './lib/api/axios';
 
 // Pages
 import Home from './pages/user/Home';
@@ -16,6 +18,16 @@ import EventsPage from './pages/admin/Events';
 const queryClient = new QueryClient();
 
 function App() {
+  // Ping backend health once on app mount to warm up Render server and reduce first-call latency
+  useEffect(() => {
+    // Use a short timeout so UI is not blocked if server is sleeping
+    api
+      .get('/health', { timeout: 5000 })
+      .catch(() => {
+        // Silent: if the health check times out, normal requests will still proceed
+      });
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
