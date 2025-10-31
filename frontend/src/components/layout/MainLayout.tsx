@@ -74,7 +74,7 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
     size="full"
     className="h-16 px-2 sm:px-4 md:px-6 lg:px-8 flex items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]"
   >
-          {/* Logo */}
+          {/* Logo + Org text */}
           <div className="flex items-center gap-3 justify-self-start">
             {/* Logo TDMU */}
             <Link to="/" className="flex items-center hover:opacity-90 transition-opacity focus:outline-none focus:ring-0">
@@ -109,6 +109,16 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
                 className="h-12 w-12 object-contain select-none"
               />
             </Link>
+
+            {/* Tên đơn vị */}
+            <div className="hidden lg:flex flex-col leading-tight ml-1">
+              <span className="text-[13px] sm:text-sm font-semibold text-gray-800">
+                Đoàn thanh niên - Hội sinh viên
+              </span>
+              <span className="text-[12px] text-gray-600">
+                Trường Đại học Thủ Dầu Một
+              </span>
+            </div>
           </div>
 
           {/* Desktop Menu */}
@@ -132,7 +142,7 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
               onClick={handleFacultyClubsClick}
               className="text-base font-medium text-gray-700 hover:text-blue-700 transition-colors cursor-pointer"
             >
-              CLB theo Khoa/Viện
+              CLB theo Trường Khoa Viện
             </a>
             <a
               href="#contact"
@@ -215,7 +225,7 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
               <div className="flex flex-col gap-3">
                 <a href="#clubs" onClick={handleClubsClick} className="text-base font-medium text-gray-700">CLB</a>
                 <a href="#events" onClick={handleEventsClick} className="text-base font-medium text-gray-700">Sự kiện</a>
-                <a href="#faculty-clubs" onClick={handleFacultyClubsClick} className="text-base font-medium text-gray-700">CLB theo Khoa/Viện</a>
+                <a href="#faculty-clubs" onClick={handleFacultyClubsClick} className="text-base font-medium text-gray-700">CLB theo Trường Khoa Viện</a>
                 <a href="#contact" onClick={handleContactClick} className="text-base font-medium text-gray-700">Liên hệ</a>
                 {user?.role === 'ADMIN' && (
                   <Link to="/admin" className="text-base font-medium text-gray-700">Quản trị</Link>
