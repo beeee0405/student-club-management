@@ -110,6 +110,11 @@ router.post('/', requireAuth, requireAdmin, upload.single('image'), async (req, 
 router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req, res) => {
   const id = Number(req.params.id);
   try {
+    // Log received data for debugging
+    console.log('Received update request for club', id);
+    console.log('Request body:', req.body);
+    console.log('File:', req.file ? 'Yes' : 'No');
+    
     // For update, make all fields optional
     const UpdateSchema = ClubSchema.partial();
     const data = UpdateSchema.parse(req.body);
@@ -127,6 +132,7 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
   } catch (err: any) {
     console.error('Update club error:', err);
     if (err.name === 'ZodError') {
+      console.error('Zod validation errors:', JSON.stringify(err.errors, null, 2));
       const errorMessage = err.errors?.[0]?.message || 'Invalid input';
       return res.status(400).json({ message: errorMessage, errors: err.errors });
     }
