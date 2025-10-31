@@ -10,7 +10,7 @@ import RichTextEditor from '../../components/ui/RichTextEditor';
 
 const clubSchema = z.object({
   name: z.string().min(2, 'Tên câu lạc bộ phải có ít nhất 2 ký tự'),
-  description: z.string().min(1, 'Mô tả không được để trống'),
+  description: z.string().optional(), // Don't validate here, validate in onSubmitForm
   facebookUrl: z.string().optional().or(z.literal('')),
   type: z.enum(['STUDENT', 'FACULTY']),
   faculty: z.string().optional().or(z.literal('')),
@@ -81,6 +81,13 @@ const ClubFormDialog = ({
       setServerError('');
       clearErrors(); // Clear any previous errors
       
+      // Manual validation for description since it comes from RichTextEditor state
+      const trimmedDescription = description.replace(/<[^>]*>/g, '').trim();
+      if (!trimmedDescription || trimmedDescription.length < 1) {
+        setServerError('Mô tả không được để trống');
+        return;
+      }
+      
       // Ensure description is synced from rich text editor
       const submitData = { 
         ...data, 
@@ -92,6 +99,7 @@ const ClubFormDialog = ({
       console.log('=== SUBMITTING CLUB DATA ===');
       console.log('Form data from react-hook-form:', data);
       console.log('Description from state:', description);
+      console.log('Trimmed description:', trimmedDescription);
       console.log('Final submit data:', submitData);
       console.log('===========================');
       
