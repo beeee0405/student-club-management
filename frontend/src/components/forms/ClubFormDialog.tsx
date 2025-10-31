@@ -96,14 +96,6 @@ const ClubFormDialog = ({
         image: selectedFile || undefined 
       };
       
-      // Debug log - detailed
-      console.log('=== SUBMITTING CLUB DATA ===');
-      console.log('Form data from react-hook-form:', data);
-      console.log('Description from state:', description);
-      console.log('Trimmed description:', trimmedDescription);
-      console.log('Final submit data:', submitData);
-      console.log('===========================');
-      
       await onSubmit(submitData);
       onOpenChange(false);
       reset();
@@ -146,12 +138,7 @@ const ClubFormDialog = ({
           </div>
         )}
 
-        <form onSubmit={(e) => {
-          console.log('Form submit event triggered');
-          console.log('Current errors:', errors);
-          console.log('Form values:', watch());
-          handleSubmit(onSubmitForm)(e);
-        }} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Tên câu lạc bộ</Label>
             <Input
