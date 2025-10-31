@@ -51,7 +51,8 @@ const ClubFormDialog = ({
     setValue,
     watch,
   } = useForm<ClubFormData>({
-    resolver: zodResolver(clubSchema),
+    // Temporarily disable validation to see backend error
+    // resolver: zodResolver(clubSchema),
     defaultValues: initialData,
   });
 
