@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Button from '../ui/Button';
 import Container from '../ui/Container';
-import CornerLogo from '../ui/CornerLogo';
 import { MapPin, Phone, Mail, Menu, X, Megaphone } from 'lucide-react';
 
 interface MainLayoutProps {
@@ -69,9 +68,6 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden flex flex-col">
-      {/* Logo góc trang */}
-      <CornerLogo position="bottom-right" size="md" href="/" />
-
   {/* ===== HEADER (fixed) ===== */}
   <header className="fixed top-0 left-0 right-0 z-50 w-full border-b bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75 shadow-sm">
   <Container
@@ -79,7 +75,26 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
     className="h-16 px-2 sm:px-4 md:px-6 lg:px-8 flex items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]"
   >
           {/* Logo */}
-          <div className="flex items-center justify-self-start">
+          <div className="flex items-center gap-3 justify-self-start">
+            {/* Logo Đoàn */}
+            <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
+              <img
+                src="/images/Logo Đoàn Thanh Niên Cộng Sản Hồ Chí Minh.png"
+                alt="Đoàn Thanh niên"
+                className="h-12 w-12 object-contain select-none"
+              />
+            </Link>
+            
+            {/* Logo Hội Sinh viên */}
+            <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
+              <img
+                src="/images/Logo Hội Sinh Viên Việt Nam.png"
+                alt="Hội Sinh viên"
+                className="h-12 w-12 object-contain select-none"
+              />
+            </Link>
+            
+            {/* Logo TDMU */}
             <Link to="/" className="flex items-center hover:opacity-90 transition-opacity focus:outline-none focus:ring-0">
               <img
                 src="/images/Logo_TDMU_2024_nguyen_ban.png"
