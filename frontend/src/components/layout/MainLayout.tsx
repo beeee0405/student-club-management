@@ -112,10 +112,10 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
 
             {/* Tên đơn vị */}
             <div className="hidden lg:flex flex-col leading-tight ml-1">
-              <span className="text-[13px] sm:text-sm font-semibold text-gray-800">
+              <span className="text-sm md:text-base lg:text-lg font-bold text-gray-800 whitespace-nowrap">
                 Đoàn thanh niên - Hội sinh viên
               </span>
-              <span className="text-[12px] text-gray-600">
+              <span className="text-xs md:text-sm lg:text-base text-gray-700 whitespace-nowrap">
                 Trường Đại học Thủ Dầu Một
               </span>
             </div>
