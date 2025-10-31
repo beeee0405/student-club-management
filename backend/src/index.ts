@@ -9,7 +9,19 @@ import eventRoutes from './routes/events';
 
 const app = express();
 
-app.use(cors());
+// Configure CORS to allow requests from your frontend domain
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://clbtdmu.id.vn',
+    'https://www.clbtdmu.id.vn'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 const uploadDir = process.env.UPLOAD_DIR || 'uploads';
