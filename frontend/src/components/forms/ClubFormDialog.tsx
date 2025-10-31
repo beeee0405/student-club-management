@@ -50,16 +50,19 @@ const ClubFormDialog = ({
     reset,
     setValue,
     watch,
+    clearErrors,
   } = useForm<ClubFormData>({
     // Temporarily disable validation to see backend error
     // resolver: zodResolver(clubSchema),
     defaultValues: initialData,
+    mode: 'onSubmit',
   });
 
   const clubType = watch('type');
 
   // Cập nhật form khi initialData thay đổi (mở dialog sửa)
   useEffect(() => {
+    clearErrors(); // Clear previous errors
     if (initialData) {
       reset(initialData as any);
       setDescription(initialData.description || '');
@@ -67,7 +70,7 @@ const ClubFormDialog = ({
       reset({ name: '', description: '', facebookUrl: '', type: 'STUDENT', faculty: '' } as any);
       setDescription('');
     }
-  }, [initialData, reset]);
+  }, [initialData, reset, clearErrors]);
 
   // Cập nhật description trong form khi rich text editor thay đổi
   useEffect(() => {
@@ -77,6 +80,8 @@ const ClubFormDialog = ({
   const onSubmitForm = async (data: ClubFormData) => {
     try {
       setServerError('');
+      clearErrors(); // Clear any previous errors
+      
       // Ensure description is synced from rich text editor
       const submitData = { 
         ...data, 
@@ -96,6 +101,7 @@ const ClubFormDialog = ({
       reset();
       setSelectedFile(null);
       setDescription('');
+      clearErrors();
     } catch (error) {
       console.error('Failed to submit form:', error);
       // Try show server message if available (Axios-style error)
