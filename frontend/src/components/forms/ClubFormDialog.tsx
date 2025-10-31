@@ -145,7 +145,12 @@ const ClubFormDialog = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
+        <form onSubmit={(e) => {
+          console.log('Form submit event triggered');
+          console.log('Current errors:', errors);
+          console.log('Form values:', watch());
+          handleSubmit(onSubmitForm)(e);
+        }} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Tên câu lạc bộ</Label>
             <Input
