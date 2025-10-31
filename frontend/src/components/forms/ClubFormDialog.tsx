@@ -1,6 +1,4 @@
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../../components/ui/Dialog';
 import { Label } from '../../components/ui/Label';
@@ -8,15 +6,12 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import RichTextEditor from '../../components/ui/RichTextEditor';
 
-const clubSchema = z.object({
-  name: z.string().min(2, 'Tên câu lạc bộ phải có ít nhất 2 ký tự'),
-  description: z.string().optional(), // Don't validate here, validate in onSubmitForm
-  facebookUrl: z.string().optional().or(z.literal('')),
-  type: z.enum(['STUDENT', 'FACULTY']),
-  faculty: z.string().optional().or(z.literal('')),
-});
-
-type ClubFormData = z.infer<typeof clubSchema> & {
+type ClubFormData = {
+  name: string;
+  description: string; // Required - validated manually in onSubmitForm
+  facebookUrl?: string;
+  type: 'STUDENT' | 'FACULTY';
+  faculty?: string;
   image?: File;
 };
 
@@ -48,8 +43,8 @@ const ClubFormDialog = ({
     watch,
     clearErrors,
   } = useForm<ClubFormData>({
-    resolver: zodResolver(clubSchema),
-    defaultValues: initialData,
+    // Validate manually in onSubmitForm to handle RichTextEditor state
+    defaultValues: initialData as any,
     mode: 'onSubmit',
   });
 
@@ -79,9 +74,15 @@ const ClubFormDialog = ({
   const onSubmitForm = async (data: ClubFormData) => {
     try {
       setServerError('');
-      clearErrors(); // Clear any previous errors
+      clearErrors();
       
-      // Manual validation for description since it comes from RichTextEditor state
+      // Manual validation
+      if (!data.name || data.name.trim().length < 2) {
+        setServerError('Tên câu lạc bộ phải có ít nhất 2 ký tự');
+        return;
+      }
+      
+      // Validate description from RichTextEditor state
       const trimmedDescription = description.replace(/<[^>]*>/g, '').trim();
       if (!trimmedDescription || trimmedDescription.length < 1) {
         setServerError('Mô tả không được để trống');
