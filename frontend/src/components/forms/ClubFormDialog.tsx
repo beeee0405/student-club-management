@@ -11,11 +11,7 @@ import RichTextEditor from '../../components/ui/RichTextEditor';
 const clubSchema = z.object({
   name: z.string().min(2, 'Tên câu lạc bộ phải có ít nhất 2 ký tự'),
   description: z.string().min(1, 'Mô tả không được để trống'),
-  facebookUrl: z
-    .string()
-    .url('Đường dẫn Facebook không hợp lệ')
-    .optional()
-    .or(z.literal('')),
+  facebookUrl: z.string().optional().or(z.literal('')),
   type: z.enum(['STUDENT', 'FACULTY']),
   faculty: z.string().optional().or(z.literal('')),
 });
@@ -52,8 +48,7 @@ const ClubFormDialog = ({
     watch,
     clearErrors,
   } = useForm<ClubFormData>({
-    // Temporarily disable validation to see backend error
-    // resolver: zodResolver(clubSchema),
+    resolver: zodResolver(clubSchema),
     defaultValues: initialData,
     mode: 'onSubmit',
   });
@@ -61,17 +56,21 @@ const ClubFormDialog = ({
   const clubType = watch('type');
 
   // Cập nhật form khi initialData thay đổi (mở dialog sửa)
+  // Cập nhật form khi initialData thay đổi (mở dialog sửa)
   useEffect(() => {
-    clearErrors(); // Clear previous errors
-    if (initialData) {
-      reset(initialData as any);
-      setDescription(initialData.description || '');
-    } else {
-      reset({ name: '', description: '', facebookUrl: '', type: 'STUDENT', faculty: '' } as any);
-      setDescription('');
+    if (open) {
+      // Reset form và clear errors khi dialog mở
+      clearErrors();
+      setServerError('');
+      if (initialData) {
+        reset(initialData as any);
+        setDescription(initialData.description || '');
+      } else {
+        reset({ name: '', description: '', facebookUrl: '', type: 'STUDENT', faculty: '' } as any);
+        setDescription('');
+      }
     }
-  }, [initialData, reset, clearErrors]);
-
+  }, [open, initialData, reset, clearErrors]);
   // Cập nhật description trong form khi rich text editor thay đổi
   useEffect(() => {
     setValue('description', description, { shouldValidate: false, shouldDirty: false });
