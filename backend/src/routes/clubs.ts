@@ -14,10 +14,18 @@ const ClubSchema = z.object({
   description: z.string().min(1),
   facebookUrl: z
     .string()
-    .url('Đường dẫn Facebook không hợp lệ')
     .optional()
-    .or(z.literal('').transform(() => undefined)),
-  type: z.enum(['STUDENT', 'FACULTY']).optional(),
+    .transform(val => {
+      if (!val || val === '') return undefined;
+      // Validate URL format
+      try {
+        new URL(val);
+        return val;
+      } catch {
+        throw new Error('Đường dẫn Facebook không hợp lệ');
+      }
+    }),
+  type: z.enum(['STUDENT', 'FACULTY']),
   faculty: z.string().optional().or(z.literal('').transform(() => undefined)),
 });
 
