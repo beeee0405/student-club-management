@@ -74,11 +74,21 @@ const ClubFormDialog = ({
 
   const onSubmitForm = async (data: ClubFormData) => {
     try {
-      const submitData = { ...data, image: selectedFile || undefined };
+      // Ensure description is synced from rich text editor
+      const submitData = { 
+        ...data, 
+        description: description, // Use state value from RichTextEditor
+        image: selectedFile || undefined 
+      };
+      
+      // Debug log
+      console.log('Submitting club data:', submitData);
+      
       await onSubmit(submitData);
       onOpenChange(false);
       reset();
       setSelectedFile(null);
+      setDescription('');
     } catch (error) {
       console.error('Failed to submit form:', error);
     }
@@ -92,6 +102,19 @@ const ClubFormDialog = ({
             {mode === 'create' ? 'Thêm câu lạc bộ mới' : 'Chỉnh sửa câu lạc bộ'}
           </DialogTitle>
         </DialogHeader>
+
+        {Object.keys(errors).length > 0 && (
+          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">
+            <strong>Vui lòng kiểm tra lại:</strong>
+            <ul className="list-disc list-inside mt-1">
+              {errors.name && <li>{errors.name.message}</li>}
+              {errors.description && <li>{errors.description.message}</li>}
+              {errors.facebookUrl && <li>{errors.facebookUrl.message}</li>}
+              {errors.type && <li>{errors.type.message}</li>}
+              {errors.faculty && <li>{errors.faculty.message}</li>}
+            </ul>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
           <div className="space-y-2">
