@@ -10,7 +10,7 @@ import RichTextEditor from '../../components/ui/RichTextEditor';
 
 const clubSchema = z.object({
   name: z.string().min(2, 'Tên câu lạc bộ phải có ít nhất 2 ký tự'),
-  description: z.string().min(10, 'Mô tả phải có ít nhất 10 ký tự'),
+  description: z.string().min(1, 'Mô tả không được để trống'),
   facebookUrl: z
     .string()
     .url('Đường dẫn Facebook không hợp lệ')
@@ -83,8 +83,12 @@ const ClubFormDialog = ({
         image: selectedFile || undefined 
       };
       
-      // Debug log
-      console.log('Submitting club data:', submitData);
+      // Debug log - detailed
+      console.log('=== SUBMITTING CLUB DATA ===');
+      console.log('Form data from react-hook-form:', data);
+      console.log('Description from state:', description);
+      console.log('Final submit data:', submitData);
+      console.log('===========================');
       
       await onSubmit(submitData);
       onOpenChange(false);
