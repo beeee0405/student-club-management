@@ -22,8 +22,8 @@ export default function CornerLogo({ position = 'bottom-right', href = '/', size
   const [hide, setHide] = React.useState(false);
 
   // Additional logos
-  const doanLogo = '/images/logo_doan_thanh_nien.png';
-  const hoiSVLogo = '/images/logo_hoi_sinh_vien.png';
+  const doanLogo = '/images/Logo Đoàn Thanh Niên Cộng Sản Hồ Chí Minh.png';
+  const hoiSVLogo = '/images/Logo Hội Sinh Viên Việt Nam.png';
 
   // sizes
   const box = size === 'sm' ? 'h-10 w-10' : 'h-14 w-14';
