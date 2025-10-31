@@ -122,11 +122,11 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
     // Validate
     const parseResult = UpdateSchema.safeParse(req.body);
     if (!parseResult.success) {
-      console.error('Zod validation failed:', JSON.stringify(parseResult.error.errors, null, 2));
-      const errorMessage = parseResult.error.errors?.[0]?.message || 'Invalid input';
+      console.error('Zod validation failed:', JSON.stringify(parseResult.error.issues, null, 2));
+      const errorMessage = parseResult.error.issues?.[0]?.message || 'Invalid input';
       return res.status(400).json({ 
         message: errorMessage, 
-        errors: parseResult.error.errors,
+        errors: parseResult.error.issues,
         receivedData: req.body 
       });
     }
