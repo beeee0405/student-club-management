@@ -113,11 +113,25 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
     // Log received data for debugging
     console.log('Received update request for club', id);
     console.log('Request body:', req.body);
+    console.log('Request body keys:', Object.keys(req.body));
     console.log('File:', req.file ? 'Yes' : 'No');
     
     // For update, make all fields optional
     const UpdateSchema = ClubSchema.partial();
-    const data = UpdateSchema.parse(req.body);
+    
+    // Validate
+    const parseResult = UpdateSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      console.error('Zod validation failed:', JSON.stringify(parseResult.error.errors, null, 2));
+      const errorMessage = parseResult.error.errors?.[0]?.message || 'Invalid input';
+      return res.status(400).json({ 
+        message: errorMessage, 
+        errors: parseResult.error.errors,
+        receivedData: req.body 
+      });
+    }
+    
+    const data = parseResult.data;
     
     let image: string | undefined;
     
@@ -126,6 +140,8 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
     }
     
     const updateData = image ? { ...data, image } : data;
+    
+    console.log('Parsed data to update:', updateData);
 
     const club = await prisma.club.update({ where: { id }, data: updateData });
     res.json(club);
