@@ -76,24 +76,6 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
   >
           {/* Logo */}
           <div className="flex items-center gap-3 justify-self-start">
-            {/* Logo Đoàn */}
-            <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
-              <img
-                src="/images/Logo Đoàn Thanh Niên Cộng Sản Hồ Chí Minh.png"
-                alt="Đoàn Thanh niên"
-                className="h-12 w-12 object-contain select-none"
-              />
-            </Link>
-            
-            {/* Logo Hội Sinh viên */}
-            <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
-              <img
-                src="/images/Logo Hội Sinh Viên Việt Nam.png"
-                alt="Hội Sinh viên"
-                className="h-12 w-12 object-contain select-none"
-              />
-            </Link>
-            
             {/* Logo TDMU */}
             <Link to="/" className="flex items-center hover:opacity-90 transition-opacity focus:outline-none focus:ring-0">
               <img
@@ -107,6 +89,24 @@ const MainLayout = ({ children, contentSize = 'wide' }: MainLayoutProps) => {
                     img.style.display = 'none';
                   };
                 }}
+              />
+            </Link>
+            
+            {/* Logo Đoàn */}
+            <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
+              <img
+                src="/images/Logo Đoàn Thanh NIên Cộng Sản Hồ Chí Minh.png"
+                alt="Đoàn Thanh niên"
+                className="h-12 w-12 object-contain select-none"
+              />
+            </Link>
+            
+            {/* Logo Hội Sinh viên */}
+            <Link to="/" className="flex items-center hover:opacity-90 transition-opacity">
+              <img
+                src="/images/Logo Hội Sinh Viên Việt Nam.png"
+                alt="Hội Sinh viên"
+                className="h-12 w-12 object-contain select-none"
               />
             </Link>
           </div>
