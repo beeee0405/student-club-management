@@ -10,7 +10,7 @@ import eventRoutes from './routes/events';
 const app = express();
 
 // Configure CORS to allow requests from your frontend domain
-app.use(cors({
+const corsOptions = {
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
@@ -20,7 +20,10 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
+
+console.log('CORS configured for origins:', corsOptions.origin);
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
