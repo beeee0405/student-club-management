@@ -62,7 +62,8 @@ const ClubsPage = () => {
       refetch();
     } catch (error) {
       console.error('Failed to submit club:', error);
-      // Don't close dialog on error, let user see the error and retry
+      // Rethrow so the dialog can show the server error message
+      throw error;
     }
   };
 

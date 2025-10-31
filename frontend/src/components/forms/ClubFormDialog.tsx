@@ -40,6 +40,7 @@ const ClubFormDialog = ({
   mode,
 }: ClubFormDialogProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [serverError, setServerError] = useState<string>('');
   const [description, setDescription] = useState<string>(initialData?.description || '');
 
   const {
@@ -74,6 +75,7 @@ const ClubFormDialog = ({
 
   const onSubmitForm = async (data: ClubFormData) => {
     try {
+      setServerError('');
       // Ensure description is synced from rich text editor
       const submitData = { 
         ...data, 
@@ -91,6 +93,14 @@ const ClubFormDialog = ({
       setDescription('');
     } catch (error) {
       console.error('Failed to submit form:', error);
+      // Try show server message if available (Axios-style error)
+      try {
+        // @ts-expect-error dynamic
+        const message = error?.response?.data?.message || 'Lưu thất bại, vui lòng thử lại.';
+        setServerError(String(message));
+      } catch {
+        setServerError('Lưu thất bại, vui lòng thử lại.');
+      }
     }
   };
 
@@ -103,10 +113,11 @@ const ClubFormDialog = ({
           </DialogTitle>
         </DialogHeader>
 
-        {Object.keys(errors).length > 0 && (
+        {(serverError || Object.keys(errors).length > 0) && (
           <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm">
             <strong>Vui lòng kiểm tra lại:</strong>
             <ul className="list-disc list-inside mt-1">
+              {serverError && <li>{serverError}</li>}
               {errors.name && <li>{errors.name.message}</li>}
               {errors.description && <li>{errors.description.message}</li>}
               {errors.facebookUrl && <li>{errors.facebookUrl.message}</li>}
