@@ -15,18 +15,16 @@ const ClubSchema = z.object({
   facebookUrl: z
     .string()
     .optional()
+    .nullable()
     .transform(val => {
       if (!val || val === '') return undefined;
-      // Validate URL format
-      try {
-        new URL(val);
-        return val;
-      } catch {
-        throw new Error('Đường dẫn Facebook không hợp lệ');
-      }
+      return val;
     }),
   type: z.enum(['STUDENT', 'FACULTY']),
-  faculty: z.string().optional().or(z.literal('').transform(() => undefined)),
+  faculty: z.string().optional().nullable().transform(val => {
+    if (!val || val === '') return undefined;
+    return val;
+  }),
 });
 
 // Helper to upload buffer to Cloudinary
@@ -112,7 +110,10 @@ router.post('/', requireAuth, requireAdmin, upload.single('image'), async (req, 
 router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req, res) => {
   const id = Number(req.params.id);
   try {
-    const data = ClubSchema.partial().parse(req.body);
+    // For update, make all fields optional
+    const UpdateSchema = ClubSchema.partial();
+    const data = UpdateSchema.parse(req.body);
+    
     let image: string | undefined;
     
     if (req.file) {
@@ -124,9 +125,13 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
     const club = await prisma.club.update({ where: { id }, data: updateData });
     res.json(club);
   } catch (err: any) {
-    if (err.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
+    console.error('Update club error:', err);
+    if (err.name === 'ZodError') {
+      const errorMessage = err.errors?.[0]?.message || 'Invalid input';
+      return res.status(400).json({ message: errorMessage, errors: err.errors });
+    }
     if (err.code === 'P2025') return res.status(404).json({ message: 'Club not found' });
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
