@@ -36,28 +36,34 @@ const ClubsPage = () => {
     faculty?: string;
     image?: File;
   }) => {
-    const formData = new FormData();
-    formData.append('name', formInput.name);
-    formData.append('description', formInput.description);
-    formData.append('type', formInput.type);
-    if (formInput.facebookUrl) {
-      formData.append('facebookUrl', formInput.facebookUrl);
-    }
-    if (formInput.faculty) {
-      formData.append('faculty', formInput.faculty);
-    }
-    if (formInput.image) {
-      formData.append('image', formInput.image);
-    }
+    try {
+      const formData = new FormData();
+      formData.append('name', formInput.name);
+      formData.append('description', formInput.description);
+      formData.append('type', formInput.type);
+      if (formInput.facebookUrl) {
+        formData.append('facebookUrl', formInput.facebookUrl);
+      }
+      if (formInput.faculty) {
+        formData.append('faculty', formInput.faculty);
+      }
+      if (formInput.image) {
+        formData.append('image', formInput.image);
+      }
 
-    if (selectedClub) {
-      await updateClub.mutateAsync({ id: selectedClub.id, data: formData });
-    } else {
-      await createClub.mutateAsync(formData);
+      if (selectedClub) {
+        await updateClub.mutateAsync({ id: selectedClub.id, data: formData });
+      } else {
+        await createClub.mutateAsync(formData);
+      }
+      
+      setIsDialogOpen(false);
+      setSelectedClub(null);
+      refetch();
+    } catch (error) {
+      console.error('Failed to submit club:', error);
+      // Don't close dialog on error, let user see the error and retry
     }
-    setIsDialogOpen(false);
-    setSelectedClub(null);
-    refetch();
   };
 
   return (

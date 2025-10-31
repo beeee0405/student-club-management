@@ -69,7 +69,7 @@ const ClubFormDialog = ({
 
   // Cập nhật description trong form khi rich text editor thay đổi
   useEffect(() => {
-    setValue('description', description);
+    setValue('description', description, { shouldValidate: false, shouldDirty: false });
   }, [description, setValue]);
 
   const onSubmitForm = async (data: ClubFormData) => {
