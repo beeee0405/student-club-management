@@ -40,11 +40,11 @@ const Home = () => {
     <MainLayout>
       <div className="space-y-40 md:space-y-48 overflow-x-hidden">
         {/* ===== Banner Section ===== */}
-        <section className="relative w-full h-[450px] md:h-[550px] overflow-hidden">
+  <section className="relative w-full h-[450px] md:h-[550px] overflow-hidden bg-black">
           <img
             src="/images/bìa.jpg"
             alt="Banner TDMU"
-            className="w-full h-full object-cover brightness-[0.85]"
+            className="w-full h-full object-contain brightness-[0.9] mx-auto"
             onError={(e) => {
               const img = e.currentTarget as HTMLImageElement;
               // Fallback nếu URL có ký tự Unicode không tải được trên một số CDN

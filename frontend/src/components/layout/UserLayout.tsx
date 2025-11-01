@@ -69,10 +69,13 @@ const UserLayout = ({ children }: UserLayoutProps) => {
 
       {/* Hero Banner */}
       <section
-        className="relative w-full h-[400px] md:h-[500px] bg-cover bg-center overflow-hidden"
+        className="relative w-full h-[400px] md:h-[500px] overflow-hidden bg-black"
         style={{
           backgroundImage: 'url(/images/bìa.jpg)',
           backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'contain',
+          backgroundColor: '#000',
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
