@@ -18,7 +18,7 @@ const posClass: Record<Corner, string> = {
 };
 
 export default function CornerLogo({ position = 'bottom-right', href = '/', size = 'md', className, ...props }: CornerLogoProps) {
-  const [src] = React.useState('/images/Logo_TDMU_2024_nguyen_ban.png');
+  const [src] = React.useState('/images/bìa.jpg');
   const [hide, setHide] = React.useState(false);
 
   // Additional logos
