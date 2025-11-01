@@ -42,12 +42,13 @@ const Home = () => {
         {/* ===== Banner Section ===== */}
         <section className="relative w-full h-[450px] md:h-[550px] overflow-hidden">
           <img
-            src="/images/tdmu-campus.jpg"
-            alt="TDMU Campus"
+            src="/images/bìa.jpg"
+            alt="Banner TDMU"
             className="w-full h-full object-cover brightness-[0.85]"
             onError={(e) => {
               const img = e.currentTarget as HTMLImageElement;
-              img.src = '/images/nen.jpg';
+              // Fallback nếu URL có ký tự Unicode không tải được trên một số CDN
+              img.src = '/images/tdmu-campus.jpg';
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-blue-900/50 via-blue-800/30 to-transparent" />

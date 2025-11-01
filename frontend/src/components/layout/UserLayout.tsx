@@ -71,7 +71,7 @@ const UserLayout = ({ children }: UserLayoutProps) => {
       <section
         className="relative w-full h-[400px] md:h-[500px] bg-cover bg-center overflow-hidden"
         style={{
-          backgroundImage: 'url(/images/tdmu-campus.jpg)',
+          backgroundImage: 'url(/images/bìa.jpg)',
           backgroundPosition: 'center center',
         }}
       >
