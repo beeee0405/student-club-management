@@ -139,11 +139,11 @@ const Home = () => {
                           )}
                         </div>
 
-                        {/* Toggle button */}
+                        {/* Toggle button - centered */}
                         <button
                           type="button"
                           onClick={() => setExpandedClubId(expandedClubId === club.id ? null : club.id)}
-                          className="absolute bottom-2 right-3 inline-flex items-center rounded-full bg-blue-600 text-white text-sm font-semibold px-4 py-2 shadow-md hover:bg-blue-700 hover:shadow-lg transition-all"
+                          className="absolute bottom-2 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-blue-600 text-white text-sm font-semibold px-4 py-2 shadow-md hover:bg-blue-700 hover:shadow-lg transition-all"
                         >
                           {expandedClubId === club.id ? '✕ Thu gọn' : '📖 Xem đầy đủ'}
                         </button>
@@ -277,11 +277,11 @@ const Home = () => {
                           )}
                         </div>
 
-                        {/* Toggle button */}
+                        {/* Toggle button - centered */}
                         <button
                           type="button"
                           onClick={() => setExpandedClubId(expandedClubId === club.id ? null : club.id)}
-                          className="absolute bottom-2 right-3 inline-flex items-center rounded-full bg-orange-600 text-white text-sm font-semibold px-4 py-2 shadow-md hover:bg-orange-700 hover:shadow-lg transition-all"
+                          className="absolute bottom-2 left-1/2 -translate-x-1/2 inline-flex items-center rounded-full bg-orange-600 text-white text-sm font-semibold px-4 py-2 shadow-md hover:bg-orange-700 hover:shadow-lg transition-all"
                         >
                           {expandedClubId === club.id ? '✕ Thu gọn' : '📖 Xem đầy đủ'}
                         </button>
