@@ -40,7 +40,7 @@ const Home = () => {
     <MainLayout>
       <div className="space-y-40 md:space-y-48 overflow-x-hidden">
         {/* ===== Banner Section ===== */}
-  <section className="relative w-full h-[600px] md:h-[720px] lg:h-[800px] overflow-hidden bg-black">
+  <section className="relative w-full h-[320px] sm:h-[450px] md:h-[600px] lg:h-[720px] xl:h-[800px] overflow-hidden bg-black">
           <img
             src="/images/bìa.jpg"
             alt="Banner TDMU"
