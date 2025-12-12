@@ -1,0 +1,15 @@
+[app]
+  # Choose a name (you can change it when launching with flyctl)
+  app = "clbtdmu-api"
+  # default primary region - use a region near your users, e.g. "sin" for Singapore
+  primary_region = "sin"
+
+[build]
+  # We'll use the Dockerfile in this directory
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "5000"
+
+[mounts]
+  # No persistent mounts by default; uploads should use Cloudinary/S3 in production
