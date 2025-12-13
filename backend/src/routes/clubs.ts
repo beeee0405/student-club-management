@@ -102,8 +102,9 @@ router.post('/', requireAuth, requireAdmin, upload.single('image'), async (req, 
     const club = await prisma.club.create({ data: { ...data, image } });
     res.status(201).json(club);
   } catch (err: any) {
-    if (err.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
-    res.status(500).json({ message: 'Server error' });
+    console.error('Create club error:', err);
+    if (err?.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
+    return res.status(500).json({ message: err?.message || 'Server error' });
   }
 });
 
