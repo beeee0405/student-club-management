@@ -25,6 +25,8 @@ RUN npm ci --omit=dev
 # Copy built files and node_modules
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/node_modules ./node_modules
+# Copy Prisma schema and migrations for runtime migrate
+COPY --from=builder /app/src/prisma ./src/prisma
 
 # Create uploads directory (app serves uploads path)
 RUN mkdir -p uploads
@@ -32,5 +34,5 @@ RUN mkdir -p uploads
 ENV NODE_ENV=production
 EXPOSE 5000
 
-# Start the compiled server
-CMD ["node", "build/index.js"]
+# Run migrations then start the compiled server
+CMD ["sh", "-c", "npx prisma migrate deploy --schema src/prisma/schema.prisma && node build/index.js"]
