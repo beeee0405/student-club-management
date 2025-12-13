@@ -10,6 +10,7 @@ import { execSync } from 'child_process';
 import { prisma } from './prisma/client';
 
 const app = express();
+import logger from './lib/logger';
 
 // CORS: allow all origins (frontend domains may vary on Vercel); credentials true to support auth header
 const corsOptions: cors.CorsOptions = {
@@ -19,7 +20,7 @@ const corsOptions: cors.CorsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-console.log('CORS configured: allow all origins');
+logger.info('CORS configured: allow all origins');
 
 // Apply CORS middleware - must be BEFORE routes
 app.use(cors(corsOptions));
@@ -40,24 +41,24 @@ app.use('/api/events', eventRoutes);
 const port = Number(process.env.PORT || 5000);
 async function start() {
   try {
-    console.log('Running prisma migrate deploy...');
+    logger.info('Running prisma migrate deploy...');
     try {
       execSync('npx prisma migrate deploy --schema src/prisma/schema.prisma', { stdio: 'inherit' });
-      console.log('Migrations deployed');
+      logger.info('Migrations deployed');
     } catch (err) {
-      console.warn('migrate deploy failed, attempting prisma db push', err);
+      logger.warn('migrate deploy failed, attempting prisma db push', err);
       execSync('npx prisma db push --schema src/prisma/schema.prisma', { stdio: 'inherit' });
-      console.log('prisma db push completed');
+      logger.info('prisma db push completed');
     }
 
     // quick test connection
     await prisma.$queryRaw`SELECT 1`;
 
     app.listen(port, () => {
-      console.log(`API server listening on http://localhost:${port}`);
+      logger.info(`API server listening on http://localhost:${port}`);
     });
   } catch (err) {
-    console.error('Failed to start server due to DB/migration error:', err);
+    logger.error('Failed to start server due to DB/migration error:', err);
     process.exit(1);
   }
 }

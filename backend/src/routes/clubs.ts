@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { requireAuth, requireAdmin } from '../middlewares/auth';
 import cloudinary from '../lib/cloudinary';
 import { Readable } from 'stream';
+import logger from '../lib/logger';
 
 const upload = multer({ storage: multer.memoryStorage() });
 const router = Router();
@@ -102,9 +103,9 @@ router.post('/', requireAuth, requireAdmin, upload.single('image'), async (req, 
     const club = await prisma.club.create({ data: { ...data, image } });
     res.status(201).json(club);
   } catch (err: any) {
-    console.error('Create club error:', err);
-    if (err?.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
-    return res.status(500).json({ message: err?.message || 'Server error' });
+    logger.error('Create club error:', err);
+    if ((err as any)?.name === 'ZodError') return res.status(400).json({ message: (err as any).errors?.[0]?.message || 'Invalid input' });
+    return res.status(500).json({ message: (err as any)?.message || 'Server error' });
   }
 });
 
@@ -112,10 +113,10 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
   const id = Number(req.params.id);
   try {
     // Log received data for debugging
-    console.log('Received update request for club', id);
-    console.log('Request body:', req.body);
-    console.log('Request body keys:', Object.keys(req.body));
-    console.log('File:', req.file ? 'Yes' : 'No');
+    logger.debug('Received update request for club', id);
+    logger.debug('Request body:', req.body);
+    logger.debug('Request body keys:', Object.keys(req.body));
+    logger.debug('File:', req.file ? 'Yes' : 'No');
     
     // For update, make all fields optional
     const UpdateSchema = ClubSchema.partial();
@@ -123,7 +124,7 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
     // Validate
     const parseResult = UpdateSchema.safeParse(req.body);
     if (!parseResult.success) {
-      console.error('Zod validation failed:', JSON.stringify(parseResult.error.issues, null, 2));
+      logger.warn('Zod validation failed:', JSON.stringify(parseResult.error.issues, null, 2));
       const errorMessage = parseResult.error.issues?.[0]?.message || 'Invalid input';
       return res.status(400).json({ 
         message: errorMessage, 
@@ -142,14 +143,14 @@ router.put('/:id', requireAuth, requireAdmin, upload.single('image'), async (req
     
     const updateData = image ? { ...data, image } : data;
     
-    console.log('Parsed data to update:', updateData);
+    logger.debug('Parsed data to update:', updateData);
 
     const club = await prisma.club.update({ where: { id }, data: updateData });
     res.json(club);
   } catch (err: any) {
-    console.error('Update club error:', err);
-    if (err.name === 'ZodError') {
-      console.error('Zod validation errors:', JSON.stringify(err.errors, null, 2));
+    logger.error('Update club error:', err);
+    if ((err as any).name === 'ZodError') {
+      logger.warn('Zod validation errors:', JSON.stringify((err as any).errors, null, 2));
       const errorMessage = err.errors?.[0]?.message || 'Invalid input';
       return res.status(400).json({ message: errorMessage, errors: err.errors });
     }

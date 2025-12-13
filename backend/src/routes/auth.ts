@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { requireAuth, AuthRequest } from '../middlewares/auth';
+import logger from '../lib/logger';
 
 const router = Router();
 
@@ -41,8 +42,8 @@ router.post('/register', async (req, res) => {
     return res.json({ user, token });
   } catch (err: any) {
     if (err?.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
-    console.error('Register error:', err);
-    return res.status(500).json({ message: err?.message || 'Server error' });
+    logger.error('Register error:', err);
+    return res.status(500).json({ message: (err as any)?.message || 'Server error' });
   }
 });
 
@@ -61,8 +62,8 @@ router.post('/login', async (req, res) => {
     return res.json({ user: result, token });
   } catch (err: any) {
     if (err?.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
-    console.error('Login error:', err);
-    return res.status(500).json({ message: err?.message || 'Server error' });
+    logger.error('Login error:', err);
+    return res.status(500).json({ message: (err as any)?.message || 'Server error' });
   }
 });
 
