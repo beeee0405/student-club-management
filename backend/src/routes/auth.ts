@@ -19,7 +19,8 @@ const LoginSchema = z.object({
 });
 
 function signToken(payload: { id: number; role: 'ADMIN' | 'USER' }) {
-  const secret = process.env.JWT_SECRET as string;
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET is not set');
   return jwt.sign(payload, secret, { expiresIn: '7d' });
 }
 
@@ -39,8 +40,9 @@ router.post('/register', async (req, res) => {
     const token = signToken({ id: user.id, role: user.role });
     return res.json({ user, token });
   } catch (err: any) {
-    if (err.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
-    return res.status(500).json({ message: 'Server error' });
+    if (err?.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
+    console.error('Register error:', err);
+    return res.status(500).json({ message: err?.message || 'Server error' });
   }
 });
 
@@ -58,8 +60,9 @@ router.post('/login', async (req, res) => {
     const token = signToken({ id: user.id, role: user.role });
     return res.json({ user: result, token });
   } catch (err: any) {
-    if (err.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
-    return res.status(500).json({ message: 'Server error' });
+    if (err?.name === 'ZodError') return res.status(400).json({ message: err.errors?.[0]?.message || 'Invalid input' });
+    console.error('Login error:', err);
+    return res.status(500).json({ message: err?.message || 'Server error' });
   }
 });
 
