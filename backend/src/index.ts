@@ -9,21 +9,15 @@ import eventRoutes from './routes/events';
 
 const app = express();
 
-// Configure CORS to allow requests from your frontend domain
-const corsOptions = {
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:3000',
-    'https://clbtdmu.id.vn',
-    'https://www.clbtdmu.id.vn'
-  ],
+// CORS: allow all origins (frontend domains may vary on Vercel); credentials true to support auth header
+const corsOptions: cors.CorsOptions = {
+  origin: (_origin, callback) => callback(null, true),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-console.log('CORS configured for origins:', corsOptions.origin);
+console.log('CORS configured: allow all origins');
 
 // Apply CORS middleware - must be BEFORE routes
 app.use(cors(corsOptions));
