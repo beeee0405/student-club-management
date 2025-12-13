@@ -24,6 +24,20 @@ const corsOptions = {
 };
 
 console.log('CORS configured for origins:', corsOptions.origin);
+// Extra defensive CORS headers to ensure browsers always receive them
+app.use((req, res, next) => {
+  const origin = req.headers.origin as string | undefined;
+  if (origin && corsOptions.origin.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  }
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 app.use(cors(corsOptions));
 
 app.use(express.json());
