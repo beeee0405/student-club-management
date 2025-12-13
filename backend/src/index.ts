@@ -25,20 +25,10 @@ const corsOptions = {
 
 console.log('CORS configured for origins:', corsOptions.origin);
 
-// Apply CORS middleware
+// Apply CORS middleware - must be BEFORE routes
 app.use(cors(corsOptions));
 
-// Middleware to handle OPTIONS requests explicitly
-app.use((_req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (_req.method === 'OPTIONS') {
-    return res.sendStatus(204);
-  }
-  next();
-});
-
+// Parse JSON bodies
 app.use(express.json());
 
 const uploadDir = process.env.UPLOAD_DIR || 'uploads';
