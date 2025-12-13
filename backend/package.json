@@ -11,6 +11,7 @@
     "prisma:migrate": "prisma migrate dev --schema src/prisma/schema.prisma",
     "migrate:prod": "prisma migrate deploy --schema src/prisma/schema.prisma",
     "seed": "ts-node-dev --transpile-only -r dotenv/config src/scripts/seed.ts",
+    "fix-admin": "ts-node-dev --transpile-only -r dotenv/config src/scripts/fix-admin.ts",
     "test": "echo \"No tests yet\""
   },
   "keywords": [],
